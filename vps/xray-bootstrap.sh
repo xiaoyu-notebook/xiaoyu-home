@@ -1,4 +1,5 @@
-﻿set -e
+#!/bin/bash
+set -e
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq
 apt-get install -y -qq curl unzip jq openssl >/dev/null 2>&1
