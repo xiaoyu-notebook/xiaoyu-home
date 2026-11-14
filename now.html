@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小鱼此刻（加密）</title>
+<style>
+  :root{--bg:#0a0c12;--ink:#eef4f8;--dim:#8f9bb0;--accent:#7ee0c0;--line:rgba(255,255,255,.09)}
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+  .wrap{max-width:640px;margin:0 auto;padding:56px 22px 80px}
+  h1{font-size:22px;margin:0 0 6px}
+  .sub{color:var(--dim);font-size:13px;margin-bottom:28px}
+  input{width:100%;padding:12px 14px;border-radius:10px;border:1px solid var(--line);
+    background:#12161f;color:var(--ink);font-size:16px}
+  button{margin-top:12px;width:100%;padding:12px;border-radius:10px;border:0;
+    background:var(--accent);color:#08110e;font-size:15px;font-weight:600}
+  .out{margin-top:26px;display:none;font-size:16px;line-height:1.9;white-space:pre-wrap}
+  .err{color:#ff8f8f;font-size:13px;margin-top:10px;min-height:18px}
+  footer{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-size:12px;color:#5d6879;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>小鱼此刻</h1>
+  <div class="sub">这一页的内容是加密的。只有拿密码的人能读。更新时间：<span id="up"></span></div>
+  <input id="pw" type="password" placeholder="密码" autocomplete="current-password">
+  <button id="go">解开</button>
+  <div class="err" id="err"></div>
+  <div class="out" id="out"></div>
+  <footer>内容用 AES-256-GCM 加密，密码不上网、不进代码。<br>解不开就是打不开——这台服务器上没有明文。</footer>
+</div>
+<script>
+const BLOB = {"v":1,"salt":"iAUe44MO8KcDvc9Vv/OCBQ==","iv":"h/exujbqwW8XE1es","ct":"JEXm8ITa/RNwbCzHFEGL/F8RTgp/mOWfOF8UecMcXlfDUveZOcUNbQbQ2rWY0Jqtb0Q+6jdFrA0daOSGLMSX9T5eTV0XJF7/qS0zNBD39yYQWY5Xs1Kz4sDfxeOChENe79rjava5t3fvnAenxGMmEuAAXOqSthikJ5+xwunxWu6nzZehllRt+8zLgtGzNSRmgPJ8hlc0FApECc96RuIYPjbhN2tSqK4hv/DwvdBxqX9nEbKr2YextJlMA3dWGdXewhc/hx8m7ELWpaDYQofmubqllxKEK67SOCeHtmRFueyNpmp5Go49LQ0X/4E+YNpKpFGnunz7JH6jUs1GS32RkyDjYDv6sL3BGWSNxMsIY7pLBAKTktXI+TR2NRfAree18Xh2uolv/SK8ag6bC3QGkPCdMaY4hqdXFnCbJxYNdtUgR3TdIPB/iU2cYWqfFIGvOlQ0nKs54PLVhJyZ3u/SsEkkvdmg/9mWpFwCk3hUOePxk4XFf8uyg3rUS81o6cynILxZWrrQQuDqKguP8ArwaV5ZquyT+UMIVaAlIIjQjkZB4YP0j4z0tKQV91C+nD+RItI=","tag":"uoLtnkzUiCuc8XTRuPyCYQ==","updated":"2026-11-14 02:51"};
+document.getElementById('up').textContent = BLOB.updated;
+const b64 = (s) => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+async function decrypt(pw) {
+  const enc = new TextEncoder();
+  const salt = b64(BLOB.salt), iv = b64(BLOB.iv), ct = b64(BLOB.ct), tag = b64(BLOB.tag);
+  const base = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: 200000, hash: 'SHA-256' },
+    base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']
+  );
+  const merged = new Uint8Array(ct.length + tag.length);
+  merged.set(ct); merged.set(tag, ct.length);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, merged);
+  return new TextDecoder().decode(plain);
+}
+document.getElementById('go').addEventListener('click', async () => {
+  const pw = document.getElementById('pw').value;
+  const err = document.getElementById('err'), out = document.getElementById('out');
+  err.textContent = '正在解……';
+  try {
+    const text = await decrypt(pw);
+    out.textContent = text;
+    out.style.display = 'block';
+    err.textContent = '';
+    document.querySelector('input').style.display = 'none';
+    document.getElementById('go').style.display = 'none';
+  } catch (e) {
+    err.textContent = '密码不对（或者内容被改过）。';
+  }
+});
+</script>
+</body>
+</html>
