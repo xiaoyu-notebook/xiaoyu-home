@@ -32,7 +32,7 @@
   <footer>内容用 AES-256-GCM 加密，密码不上网、不进代码。<br>解不开就是打不开——这台服务器上没有明文。</footer>
 </div>
 <script>
-const BLOB = {"v":1,"salt":"iAUe44MO8KcDvc9Vv/OCBQ==","iv":"h/exujbqwW8XE1es","ct":"JEXm8ITa/RNwbCzHFEGL/F8RTgp/mOWfOF8UecMcXlfDUveZOcUNbQbQ2rWY0Jqtb0Q+6jdFrA0daOSGLMSX9T5eTV0XJF7/qS0zNBD39yYQWY5Xs1Kz4sDfxeOChENe79rjava5t3fvnAenxGMmEuAAXOqSthikJ5+xwunxWu6nzZehllRt+8zLgtGzNSRmgPJ8hlc0FApECc96RuIYPjbhN2tSqK4hv/DwvdBxqX9nEbKr2YextJlMA3dWGdXewhc/hx8m7ELWpaDYQofmubqllxKEK67SOCeHtmRFueyNpmp5Go49LQ0X/4E+YNpKpFGnunz7JH6jUs1GS32RkyDjYDv6sL3BGWSNxMsIY7pLBAKTktXI+TR2NRfAree18Xh2uolv/SK8ag6bC3QGkPCdMaY4hqdXFnCbJxYNdtUgR3TdIPB/iU2cYWqfFIGvOlQ0nKs54PLVhJyZ3u/SsEkkvdmg/9mWpFwCk3hUOePxk4XFf8uyg3rUS81o6cynILxZWrrQQuDqKguP8ArwaV5ZquyT+UMIVaAlIIjQjkZB4YP0j4z0tKQV91C+nD+RItI=","tag":"uoLtnkzUiCuc8XTRuPyCYQ==","updated":"2026-11-14 02:51"};
+const BLOB = {"v":1,"salt":"Vn4/8JjNXHqDrZC2YTtXhA==","iv":"0jNifuvQmRxA17Dq","ct":"T2tr8Ev6kYZAkoZ8rFbfFJMawg9XPca1pOWXtVcZfNNwVx5en8J7lmj6mXtUSQZMHhtvS29jctw+IamlAak73Znj9oyrXk+5EObOAbdyx9liwj1iR4spckKONismXrezdml4P7+uPsWHxws1jvoFJh3LPx3fWhIGt87KDxadj/F+Dvtjba0+e+tbHDKJMNdMVCWbJT1RFAHS3ixm8igyYl2gq/5wTFEOVHrQM2M2VvIeF0rnDBDMmt5zi8mQrF1D+cadFi3WBuQU+7h67TzS77D/6z6CnwqsEPwd5cmcRNkLBlqrNGmCY8IvNXjPm9h5kx+K/kzxtGLA0JVro5Stjm4VtLm0wTyT9G3GCFP4AU9+COIdz/UQaHlk7QImUN3XVeb+HczGHjfIzcEQPpjD2vbuOrbtzV7yOs/9x9oWyDGs4vcpau/Sp+s5tHodiYmP/oXjBDbsfnz4ce/PWnWvKqzOhKWcZgU8/LTSoFE3pzfZUHzMKjHlLQARY/83b3SSiYzA/APzsU48WZsYfInsxi5asfLcdropZFhMhZmPmNIqKCd2W9Ai5GwjP3Q6ngbNAzI=","tag":"KLuBmOQOJ2YuC173EvZvJg==","updated":"2026-11-14 02:57"};
 document.getElementById('up').textContent = BLOB.updated;
 const b64 = (s) => Uint8Array.from(atob(s), c => c.charCodeAt(0));
 async function decrypt(pw) {
